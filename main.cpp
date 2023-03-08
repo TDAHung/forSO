@@ -155,13 +155,18 @@ void School::inputClass(int size) {
 }
 
 void School::main() {
-	cout << "*****************************************************************\n";
-	cout << setw(WIDTH_ID) << left << "* ID";
-	cout << setw(WIDTH_NAME) << left << "Name";
-	cout << setw(WIDTH_TYPE) << left << "Type";
-	cout << setw(WIDTH) << right << "Status *" << endl;
-	cout << "*****************************************************************\n";
+	int option;
+	do {
+		cout << "*****************************************************************\n";
+		cout << setw(WIDTH_ID) << left << "* ID";
+		cout << setw(WIDTH_NAME) << left << "Name";
+		cout << setw(WIDTH_TYPE) << left << "Type";
+		cout << setw(WIDTH) << right << "Status *" << endl;
+		cout << "*****************************************************************\n\n";
 
+		cout << "Select option: ";
+		cin >> option;
+	} while (option != 0);
 }
 
 int main() {
