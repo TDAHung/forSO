@@ -1,5 +1,10 @@
 #include <iostream>
+#include <iomanip>
 #include "main.h"
+#define WIDTH_ID 10
+#define WIDTH_NAME 30
+#define WIDTH_TYPE 15
+#define WIDTH 10
 
 using namespace std;
 
@@ -10,7 +15,7 @@ int School::getNumsClass() {
 void School::viewClass() {
 	Class* phead = head;
 	while(phead){
-		cout << "ID: " << phead->id << "     ,type: " << phead->type << "      ,status: " << phead->is_Set << "\n";
+		cout << "ID: " << phead->id << "name: " <<phead->name<<", type: " << phead->type << ", status : " << phead->is_Set << "\n";
 		phead = phead->next;
 	}
 }
@@ -19,12 +24,12 @@ bool School::is_Empty() {
 	return this->numsClass;
 }
 
-bool School::addClass(string id, typeClass type, bool is_Set, int index) {
+bool School::addClass(string id,string name, typeClass type, bool is_Set, int index) {
 	if (index < 0 || index > this->getNumsClass()) {
 		return 0; // bao loi cho user
 	}
 	else {
-		Class* newClass = new Class(id, type, is_Set);
+		Class* newClass = new Class(id,name , type, is_Set);
 		if (this->numsClass == 0) {
 			head = newClass;
 			tail = head;
@@ -52,8 +57,8 @@ bool School::addClass(string id, typeClass type, bool is_Set, int index) {
 	return 1;
 }
 
-bool School::addClass(string id, typeClass type, bool is_Set) {
-	Class* newClass = new Class(id, type, is_Set);
+bool School::addClass(string id, string name, typeClass type, bool is_Set) {
+	Class* newClass = new Class(id,name, type, is_Set);
 	if (this->numsClass == 0) {
 		head = newClass;
 		tail = head;
@@ -88,18 +93,19 @@ bool School::deleteClass(string id) {
 		Class* deleteClass = head;
 		if (index == 0) {
 			head = deleteClass->next;
-			delete(deleteClass);
+			deleteClass = NULL;
 		}
-		//else if (index == this->numsClass - 1) {
-		//	for (int i = 0; i < this->numsClass - 2; i++) deleteClass = deleteClass->next;
-		//	tail = deleteClass;
-		//	delete(deleteClass->next);
-		//}
-		//else {
-		//	for (int i = 0; i < index - 2; i++) deleteClass = deleteClass->next;
-		//	deleteClass->next = deleteClass->next->next;
-		//	delete(deleteClass->next);
-		//}
+		else if (index == this->numsClass - 1) {
+			while (deleteClass->next->next) deleteClass = deleteClass->next;
+			tail = deleteClass;
+			deleteClass->next = NULL;
+		}
+		else {
+			for (int i = 0; i < index - 2; i++) deleteClass = deleteClass->next;
+			Class* tempClass = deleteClass->next;
+			deleteClass->next = deleteClass->next->next;
+			tempClass = NULL;
+		}
 		this->numsClass--;
 		return 1;
 	}
@@ -112,26 +118,59 @@ void School::setClass(string id, typeClass type, bool is_Set) {
 	classFound->setTypeClass(type);
 }
 
-int main() {
-	School* mySchool = new School(0);
-	int nums;
-	cout << "input nums: ";
-	cin >> nums;
+void School::clearAll() {
+	Class* phead = head;
+	while (phead) {
+		phead = phead->next;
+		phead = NULL;
+	}
+	this->head = NULL;
+	this->tail = NULL;
+	this->numsClass = 0;
+}
+
+void School::inputClass(int size) {
 	string id;
+	string name;
 	int typeInput;
 	bool is_Set;
-	for (int i = 0; i < nums; i++) {
+	for (int i = 0; i < size; i++) {
 		cout << "input id: ";
-		cin >> id;
+		do {
+			cin >> id;
+			if (this->findIndex(id) != -1) cout << "Duplicate id. Please input again: ";
+		} while (this->findIndex(id) != -1);
+
+		cout << "Input Name: ";
+		cin >> name;
+
 		cout << "input type (TH: 0,LT: 1): ";
-		cin >> typeInput;
+		do {
+			cin >> typeInput;
+			if (typeInput != LT && typeInput != TH) cout << "Invalid type of class. Please input again (TH: 0,LT: 1): ";
+		} while (typeInput != LT && typeInput != TH);
 		typeClass type = static_cast<typeClass>(typeInput);
-		mySchool->addClass(id,type,0);
+		this->addClass(id,name, type, 0);
 	}
-	mySchool->viewClass();
-	string test = mySchool->deleteClass("0") ? "xoa roi" : "chua xoa";
-	cout << test << endl;
-	mySchool->viewClass();
+}
+
+void School::main() {
+	cout << "*****************************************************************\n";
+	cout << setw(WIDTH_ID) << left << "* ID";
+	cout << setw(WIDTH_NAME) << left << "Name";
+	cout << setw(WIDTH_TYPE) << left << "Type";
+	cout << setw(WIDTH) << right << "Status *" << endl;
+	cout << "*****************************************************************\n";
+
+}
+
+int main() {
+	School* mySchool = new School(0);
+	//int size = 0;
+	//cout << "input nums: ";
+	//cin >> size;
+	//mySchool->inputClass(size);
+	mySchool->main();
 	return 0;
 }
 

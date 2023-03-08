@@ -19,23 +19,27 @@ public:
 	int getNumsClass();
 	bool is_Empty();
 	void viewClass();
-	bool addClass(string, typeClass, bool, int);
-	bool addClass(string, typeClass, bool);
+	bool addClass(string,string, typeClass, bool, int);
+	bool addClass(string,string, typeClass, bool);
 	int findIndex(string);
 	Class* findClass(string);
 	bool deleteClass(string);
 	void setClass(string,typeClass,bool);
+	void clearAll();
+	void inputClass(int);
+	void main();
 
 public:
 	class Class {
 	private:
 		string id;
+		string name;
 		typeClass type;
 		bool is_Set;
 		Class* next;
 		friend class School;
 	public:
-		Class(string id, typeClass type, bool is_Set) : id(id), type(type), is_Set(is_Set), next(NULL) {}
+		Class(string id,string name, typeClass type, bool is_Set) : id(id),name(name), type(type), is_Set(is_Set), next(NULL) {}
 		void setClassSet(bool is_Set) {
 			this->is_Set = is_Set;
 		}
